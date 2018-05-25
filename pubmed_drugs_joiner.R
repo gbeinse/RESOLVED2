@@ -3,9 +3,9 @@
 setwd("RESOLVED²")
 drugs = read.csv2("DRUG_LISTS/tbl_Abst_drug_vs_symbols_match - DRUG_MATCH 2018 05 17.csv", header = TRUE, as.is = TRUE)
 no_symb = read.csv2(file = "DRUG_LISTS/tbl_Abst_drug_LIST_noSYMBOLS 2018 05 17.csv", header = TRUE, as.is = TRUE)
+
+
 dlist = read.csv2(file = "DRUG_LISTS/tbl_Abst_drug_vs_symbols_match - DRUG_LIST 2018 05 17.csv", header = TRUE, as.is = TRUE)
-
-
 pubmed = read.table(file = "PUBMED_DATA/pubmed_data_2606.txt", as.is = TRUE)
 
 PMID = read.table(file = "PUBMED_DATA/PMID_MeSH.txt", header = TRUE, as.is = TRUE)
@@ -160,8 +160,8 @@ a = a[unlist(sapply(X = a, FUN = length))==0]
 
 pubmedndrugs = cbind.data.frame(PMID = pubmed$PMID, Drugs= res)
 #save to file
-write.table(x = pubmedndrugs, file = "pubmedNdrugs.txt", sep = "\t")
-
+#write.table(x = pubmedndrugs, file = "pubmedNdrugs.txt", sep = "\t")
+#write.table(x = miss, file = "pubmed2606_noMatch.txt", sep = "\t")
 
 
 
