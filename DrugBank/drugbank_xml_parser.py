@@ -1,33 +1,9 @@
 import xml.etree.ElementTree as ET
 import re
+import time
 import sys
-print("parsing xml")
-tree = ET.parse('drugbank_db.xml')
-root = tree.getroot()
-
-# drugs  = [child for child in root]
-
-print("reading files")
-pmid = []
-with open("PUBMED_DATA/pubmedNdrugs.txt") as fp:
-	line = fp.readline()
-	line = fp.readline()
-	while line :
-		pmid.append(line.split("\t")[1])
-		line = fp.readline()
-	fp.close()
-
-
-drugs_data = []
-with open("PUBMED_DATA/pubmedNdrugs.txt") as fp:
-	line = fp.readline()
-	line = fp.readline()
-	while line :
-		a= line.split("\t")[2]
-		if a!="NA":
-			drugs_data.append(line.split("\t")[2][1:-2])
-		line = fp.readline()
-	fp.close()
+from utils import File_Handler as FH
+from utils import Task_Follower as TF
 
 
 def get_xpath(elem, keyword = "", returntodrug = True, path = ""):
@@ -43,8 +19,8 @@ def get_xpath(elem, keyword = "", returntodrug = True, path = ""):
 	xpath_dict = {
 	"all_name":"./drug/name",
 	"all_pubmed-id": "./drug/general-references/articles/article/pubmed-id",
-	"by_name": "./drug/[name="+keyword+"]",
-	"by_description": "./drug/[description="+keyword+"]",
+	"by_name": "./drug[name="+keyword+"]",
+	"by_description": "./drug[description="+keyword+"]",
 	"by_pubmed-id": "./drug/general-references/articles/article[pubmed-id="+keyword+"]"
 	 }
 
@@ -54,10 +30,10 @@ def get_xpath(elem, keyword = "", returntodrug = True, path = ""):
 	return xpath_dict[elem]+retpath
 
 
-def get_alltags_text(tag):
+def get_alltext_fromtag(tag):
 	
 	tag = "all_"+tag
-	return([elem.text.lower() for elem in root.findall(get_xpath(tag, returntodrug = False))])
+	return([elem.text for elem in root.findall(get_xpath(tag, returntodrug = False))])
 
 
 
@@ -80,8 +56,31 @@ def match_any(items, data, sep = ";"):
 
 
 def char_strip(string, pattern):
-	pattern = "["+pattern+"]"
 	return re.sub(pattern, '', string)
+
+
+
+
+print("reading files")
+pmid = []
+drugs_data = []
+
+
+file = FH("../PUBMED_DATA/pubmedNdrugs.txt", sep = '\t', no_newline = True, skiplines = 1)
+
+for line in file.iter():
+	pmid.append(char_strip(line[1],"^\"\"$"))
+	a = char_strip(line[2],"\"")
+	if a!="NA":
+		drugs_data.append(a)
+
+
+print("parsing xml")
+tree = ET.parse('drugbank_db.xml')
+root = tree.getroot()
+
+
+
 
 
 # a = [elem for elem in root.findall(get_xpath("by_PMID", keyword = "26242220"))]
@@ -95,17 +94,18 @@ print("search")
 # 	res.append(root.findall(get_xpath("all_pmid", keyword = p)))
 # 	i+=1
 
-all_name=get_alltags_text("name")
+all_name = get_alltext_fromtag("name")
+real_names = get_alltext_fromtag("name")
 
 print(len(all_name))
 
 print("stripping")
 
 for i in range(len(all_name)):
-	all_name[i] = char_strip(all_name[i], "-")
+	all_name[i] = char_strip(all_name[i], "[-]").lower()
 
 for i in range(len(drugs_data)):
-	drugs_data[i] = char_strip(drugs_data[i], "-")
+	drugs_data[i] = char_strip(drugs_data[i], "[-]").lower()
 
 
 print("lookup")
@@ -125,17 +125,43 @@ print("relookup")
 # elems = [root.findall(get_xpath("by_name", keyword = name)) for name,found in zip(all_name, res) if found]
 
 elems = []
-tot = len(res)
-i = 0
-for name,found in zip(all_name, res):
-	i+=1
-	percent = i/tot
-	sys.stdout.write('\r'+str(percent))
+
+tf = TF(len(res))
+
+start = time.time()
+for name,found in zip(real_names, res):
+	
+	tf.next()
 	if found:
 		elems.append(root.find(get_xpath("by_name", keyword = name)))
+		# elems.append(name)
 
 
+duree = time.time() - start
 
+print("La recherche prend %.2f" % duree)
+
+print(elems[0:10])
 print(len(elems))
-print(elems[0])
 
+
+# out = []
+# for i in [elem.tag for elem in elems[0].iter()]:
+# 	if i not in out:
+# 		out.append(i)
+# 		print(i)
+# elems = []
+# tot = len(res)
+# i = 0
+
+# tf = TF(len(res))
+
+# start = time.time()
+# for name,found in zip(real_names, res):
+# 	i+=1
+# 	percent = 100*i/tot
+# 	sys.stdout.write('%.2f \r' % (percent))
+# 	sys.stdout.flush()
+# 	if found:
+# 		elems.append(root.find(get_xpath("by_name", keyword = name)))
+# 		# elems.append(name)
