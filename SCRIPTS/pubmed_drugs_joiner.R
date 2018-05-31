@@ -1,6 +1,6 @@
 ##Read files
 
-setwd("RESOLVED²")
+setwd("RESOLVEDÂ²")
 drugs = read.csv2("DRUG_LISTS/tbl_Abst_drug_vs_symbols_match - DRUG_MATCH 2018 05 17.csv", header = TRUE, as.is = TRUE)
 no_symb = read.csv2(file = "DRUG_LISTS/tbl_Abst_drug_LIST_noSYMBOLS 2018 05 17.csv", header = TRUE, as.is = TRUE)
 
@@ -165,7 +165,7 @@ pubmedndrugs = cbind.data.frame(PMID = pubmed$PMID, Drugs= res)
 
 
 
-# ## recupere les medicaments mentionnés dans l'abstract pour chaque PMID
+# ## recupere les medicaments mentionnÃ©s dans l'abstract pour chaque PMID
 # medocs = c(rep("",length(res$PMID)))
 # 
 # for(d in drugs$NCI_code_name){
