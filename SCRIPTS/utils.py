@@ -2,7 +2,25 @@ import sys
 import re
 
 class File_Reader():
-	"""docstring for File_Reader"""
+	"""Classe de lecture de fichiers text simples (txt, csv, tsv...).
+	Prend en compte les paramètres suivants:
+		-file_name: chemin du fichier à lire
+		-sep: séparateur de champ, aucun par defaut. En cas de separateur, chaque ligne sera une liste python avec un element pour chaque champ
+		-suppress_newlines: si on veut enlever les \n à la fin de chaque ligne, vrai par defaut
+		-skiplines: nombre de lignes à ignorer en début de fichier, 0 par defaut
+		-strip_chars_pattern: expression reguliere pour enlever certains caracteres ou expressions (ex: expace en debut de ligne), auncune par defaut
+		-encoding: l'encodage du fichier, par defaut utf8
+
+	Utilisation:
+		#Initialiser avec le chemin du fichier et les parametres voulus
+		my_file = File_Reader("chemin/vers/lefichier/")
+		#lecture ligne par ligne
+		for line in my_file.iter():
+			do_something(line)
+		#OU recuperation de chaque ligne dans une liste
+		all_lines = my_file.readlines()
+		#Une fois le fichier parcouru, il faut reutiliser cette classe si l'on veut relire le fichier.
+		"""
 	def __init__(self, file_name, sep = "", suppress_newlines = True, skiplines = 0, strip_chars_pattern = "", encoding = ""):
 		self.file_name = file_name
 		self.sep = sep
@@ -51,7 +69,13 @@ class File_Reader():
 
 
 class Task_Follower():
-	"""docstring for Task_Follower"""
+	"""Mini barre de progression en pourcentage pour les executions linéaire longues.
+
+	Utilisation:
+		#initialiser avec le nombre d'opérations
+		t = Task_Follower(count)
+		#incrémenter l'avencement
+		t.step()"""
 	def __init__(self, taskcount, message = "Completion: "):
 		self.taskcount = taskcount
 		self.done = 0
@@ -74,4 +98,5 @@ class Task_Follower():
 
 
 def head(l, start = 0, stop = 5):
+	"""Equivalent de l'outil linux head."""
 	print(l[start:stop])
