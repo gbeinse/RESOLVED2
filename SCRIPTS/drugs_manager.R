@@ -1,5 +1,5 @@
 #Parameters
-#setwd("RESOLVED²")
+#setwd("RESOLVEDÂ²")
 
 
 drugs_db_file = "DRUG_LISTS/drugs_db.tsv"
