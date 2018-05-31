@@ -40,7 +40,9 @@ ggplot(data=df1, aes(x=Publication_Year, y=Freq, fill=Match)) +
 ggplot(data=df2, aes(x=Publication_Year, y=Freq, fill=Match)) +
   geom_bar(stat="identity", position=position_dodge()) + 
   theme(axis.text.x = element_text(angle=65, vjust=0.6))+ 
-  geom_smooth(method='auto')
+  geom_smooth(method='auto') + 
+  xlab(label = "Publication Year") + 
+  ylab(label = "Percentage of sample")
 
 ggplot(data=df3, aes(x=Publication_Year, y=Freq, fill=Match)) +
   geom_bar(stat="identity", position=position_dodge()) + 

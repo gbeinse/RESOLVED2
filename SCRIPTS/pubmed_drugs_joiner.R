@@ -1,14 +1,13 @@
 ##Read files
 
-setwd("RESOLVEDÂ²")
+setwd("RESOLVED²")
 drugs = read.csv2("DRUG_LISTS/tbl_Abst_drug_vs_symbols_match - DRUG_MATCH 2018 05 17.csv", header = TRUE, as.is = TRUE)
 no_symb = read.csv2(file = "DRUG_LISTS/tbl_Abst_drug_LIST_noSYMBOLS 2018 05 17.csv", header = TRUE, as.is = TRUE)
-
-
 dlist = read.csv2(file = "DRUG_LISTS/tbl_Abst_drug_vs_symbols_match - DRUG_LIST 2018 05 17.csv", header = TRUE, as.is = TRUE)
-pubmed = read.table(file = "PUBMED_DATA/pubmed_data_2606.txt", as.is = TRUE)
+listsupp = read.table(file = "DRUG_LISTS/tbl_Abst_drug_LIST_SUPP 2018 05 31.txt", header = TRUE, sep = "\t", as.is = TRUE)
 
-PMID = read.table(file = "PUBMED_DATA/PMID_MeSH.txt", header = TRUE, as.is = TRUE)
+pubmed = read.table(file = "PUBMED_DATA/pubmed_data_2606.txt", as.is = TRUE)
+#PMID = read.table(file = "PUBMED_DATA/PMID_MeSH.txt", header = TRUE, as.is = TRUE)
 
 
 #functions
@@ -117,16 +116,16 @@ keyword_assigner <- function(corpus, keywords) {
 ##Exec
 
 #construction du vecteur des drugs. Un element contient tous les alias du meme medicament
-d_match = casefold(vect.char_combiner(drugs$NCI_code_name, drugs$NCI.drug.dictionnary.match.or.drug.name))
-
-d_list = casefold(vect.char_combiner(dlist$drug_list, dlist$DRUG_LIST))
-d_list[302] <- "NA"
-
-d_nosym = casefold(no_symb$DRUG_LIST_NO_SYMBOL_CURED)
-
-
-pubmed$Abstract = casefold(pubmed$Abstract)
-pubmed$Title = casefold(pubmed$Title)
+# d_match = casefold(vect.char_combiner(drugs$NCI_code_name, drugs$NCI.drug.dictionnary.match.or.drug.name))
+# 
+# d_list = casefold(vect.char_combiner(dlist$drug_list, dlist$DRUG_LIST))
+# d_list[302] <- "NA"
+# 
+# d_nosym = casefold(no_symb$DRUG_LIST_NO_SYMBOL_CURED)
+# 
+# 
+# pubmed$Abstract = casefold(pubmed$Abstract)
+# pubmed$Title = casefold(pubmed$Title)
 
 
 
@@ -165,7 +164,7 @@ pubmedndrugs = cbind.data.frame(PMID = pubmed$PMID, Drugs= res)
 
 
 
-# ## recupere les medicaments mentionnÃ©s dans l'abstract pour chaque PMID
+# ## recupere les medicaments mentionnés dans l'abstract pour chaque PMID
 # medocs = c(rep("",length(res$PMID)))
 # 
 # for(d in drugs$NCI_code_name){
